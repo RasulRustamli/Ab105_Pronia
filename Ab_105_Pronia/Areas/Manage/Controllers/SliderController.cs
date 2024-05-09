@@ -49,5 +49,29 @@ namespace Ab_105_Pronia.Areas.Manage.Controllers
 
             return RedirectToAction("Index");
         }
+        public IActionResult Update(int id)
+        {
+            var slider=_context.Sliders.FirstOrDefault(X=>X.Id==id);
+            if(slider==null)
+            {
+                return RedirectToAction("Index");   
+            }
+            return View(slider);
+        }
+        [HttpPost]
+        public IActionResult Update(Slider slider)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View();
+            }
+            var oldSlider=_context.Sliders.FirstOrDefault(x=>x.Id == slider.Id);
+            if(oldSlider==null) {return RedirectToAction("Index"); }
+            oldSlider.Title = slider.Title;
+            oldSlider.SubTitle = slider.SubTitle;
+            oldSlider.ImgUrl = slider.ImgUrl;
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
     }
 }
