@@ -27,11 +27,11 @@
                     <td>@item.SubTitle</td>
                     <td> <div style="width:100px">
 
-                            <img width="100%" src="~/assets/images/website-images/@item.ImgUrl">
+                            <img width="100%" src="~/Upload/Slider/@item.ImgUrl">
                     </div></td>
                     <td>
                         <a class="btn btn-secondary" asp-action="Update" asp-route-id=@item.Id>Update</a>
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-id=@item.Id>Delete</a>
+                        <a class="btn btn-danger item-delete" asp-action="Delete" asp-route-id=@item.Id>Delete</a>
 
 
                     </td>

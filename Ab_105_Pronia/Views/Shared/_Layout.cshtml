@@ -116,7 +116,7 @@
                     <a href="tel://+00-123-456-789">+00 123 456 789</a>
                   </div>
 
-                  <a href="index.html" class="header-logo">
+                  <a asp-controller="" class="header-logo">
                     <img src="~/assets/images/logo/dark.png" alt="Header Logo" />
                   </a>
 
@@ -147,16 +147,33 @@
                           class="dropdown-menu"
                           aria-labelledby="settingButton"
                         >
-                          <li>
-                            <a class="dropdown-item" href="my-account.html"
-                              >My account</a
+                          @if(User.Identity.IsAuthenticated)
+                          {
+
+                              <li>
+                            <a class="dropdown-item" 
+                              >@User.Identity.Name</a
                             >
                           </li>
                           <li>
-                            <a class="dropdown-item" href="login-register.html"
-                              >Login | Register</a
+                            <a class="dropdown-item" asp-action="Logout" asp-controller="Account"
+                              >LogOut</a
                             >
                           </li>
+                          }
+                          else
+                          {
+                              <li>
+                            <a class="dropdown-item" asp-action="Login" asp-controller="Account"
+                              >Login</a
+                            >
+                          </li>
+                          <li>
+                            <a class="dropdown-item"asp-action="Register" asp-controller="Account"
+                              >Register</a
+                            >
+                          </li>
+                          }
                         </ul>
                       </li>
                       <li class="d-none d-lg-block">
