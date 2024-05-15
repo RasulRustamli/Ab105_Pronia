@@ -36,7 +36,7 @@ namespace Ab_105_Pronia.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Ab_105_Pronia.Models.Product", b =>
@@ -73,7 +73,7 @@ namespace Ab_105_Pronia.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Ab_105_Pronia.Models.Slider", b =>
@@ -102,7 +102,7 @@ namespace Ab_105_Pronia.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sliders");
+                    b.ToTable("Sliders", (string)null);
                 });
 
             modelBuilder.Entity("Ab_105_Pronia.Models.User", b =>

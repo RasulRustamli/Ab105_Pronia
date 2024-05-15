@@ -12,9 +12,8 @@ builder.Services.AddIdentity<User, IdentityRole>(opt =>
 {
     opt.Password.RequiredLength = 8;
     opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._";
-    opt.Lockout.AllowedForNewUsers = false;
     opt.Lockout.MaxFailedAccessAttempts = 3;
-    opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(30);
+    opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(2);
     opt.User.RequireUniqueEmail=true;
 }).AddEntityFrameworkStores<AppDbContext>();
 
