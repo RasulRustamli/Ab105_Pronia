@@ -1,4 +1,6 @@
-﻿using Ab_105_Pronia.Helpers.Account;
+﻿using Ab_105_Pronia.Abstractions;
+using Ab_105_Pronia.Helpers.Account;
+using Ab_105_Pronia.Helpers.Email;
 using Ab_105_Pronia.Models;
 using Ab_105_Pronia.ViewModels.Account;
 using Microsoft.AspNetCore.Identity;
@@ -11,15 +13,17 @@ namespace Ab_105_Pronia.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IMailService mailService;
 
         public AccountController(
             UserManager<User> userManager
             ,SignInManager<User> signInManager,
-            RoleManager<IdentityRole> roleManager )
+            RoleManager<IdentityRole> roleManager,IMailService mailService )
         {
             this._userManager = userManager;
             this._signInManager = signInManager;
             _roleManager = roleManager;
+            this.mailService = mailService;
         }
         public IActionResult Register()
         {
@@ -142,5 +146,54 @@ namespace Ab_105_Pronia.Controllers
             }
             return Ok();
         }
+
+
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordVm forgotPasswordVm)
+        {
+            if (!ModelState.IsValid) return View();
+            var user = await _userManager.FindByEmailAsync(forgotPasswordVm.Email);
+            if (user is null) return NotFound();
+            //http://localhost:5105/account/ResetPassword?userId={userid}&token
+            string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            string link = Url.Action("ResetPassword", "Account", new { userId = user.Id, token = token },HttpContext.Request.Scheme);
+            await mailService.SendEmailAsync(new MailRequest()
+            {
+                Subject="Reset Password",
+                ToEmail=user.Email,
+                Body=$"<a href='{link}'>Reset password</a>"
+            });
+            Console.WriteLine(link);
+            return RedirectToAction("Login");
+
+
+
+
+        }
+        public async Task<IActionResult> ResetPassword(string userId,string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if(user is null) return NotFound();
+            return View();
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordVm vm,string userId, string token)
+        {
+            if (!ModelState.IsValid) return View();
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user is null) return NotFound();
+            var result = await _userManager.ResetPasswordAsync(user, token, vm.Password);
+
+
+
+            return RedirectToAction("Login");
+
+        }
+
     }
 }
